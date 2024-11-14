@@ -13,7 +13,6 @@
     z-index: 99;
 }
 
-
 /*** Spinner ***/
 #spinner {
     opacity: 0;
@@ -221,6 +220,7 @@
 }
 
 /*datatable css*/
+
 .dt-left {
     text-align: left !important;
 }
@@ -268,4 +268,36 @@ div.dt-container .dt-paging .dt-paging-button.current, div.dt-container .dt-pagi
     color: #f0ad4e; /* Warning color */
     font-size: 50px;
 }
+
+/* Custom class for horizontal scrollbar */
+.scrollable-table {
+    overflow-x: auto; /* Enables horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile devices */
+    max-width: 100%; /* Ensures the table does not exceed the container width */
+}
+
+    .scrollable-table::-webkit-scrollbar {
+        height: 8px; /* Custom height for the scrollbar */
+    }
+
+    .scrollable-table::-webkit-scrollbar-thumb {
+        background-color: #009cff; /* Color of the scrollbar handle */
+        border-radius: 4px; /* Round the edges of the scrollbar handle */
+        border: 2px solid #fff; /* Creates a border around the handle */
+    }
+
+        .scrollable-table::-webkit-scrollbar-thumb:hover {
+            background-color: #006f99; /* Darker color when hovering over the scrollbar */
+        }
+
+    .scrollable-table::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Background color of the scrollbar track */
+        border-radius: 4px; /* Rounded corners for the track */
+    }
+
+    /* Optional: Adding shadow effect to the table */
+    .scrollable-table table {
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
 
