@@ -1,0 +1,7 @@
+Errors:
+
+1. We need to import POST.Models in ErrorViewModel to import in _ViewImports.cshtml
+
+2. Areas need to create by add scafolding in project and defining in Controller and Program.cs
+
+3. Install Microsoft.EntityFrameworkCore.Design in Startup Main Project to add-migration from DataAccess

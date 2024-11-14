@@ -64,6 +64,10 @@
     border-radius: 50px;
 }
 
+.btn-no-shadow{
+    box-shadow: none !important;
+}
+
 
 /*** Layout ***/
 .sidebar {
@@ -215,3 +219,53 @@
         margin-left: 15px;
     }
 }
+
+/*datatable css*/
+.dt-left {
+    text-align: left !important;
+}
+/* Style for the pagination container */
+.dt-container .dt-paging {
+    padding: 10px;
+}
+
+/* Style for all pagination buttons */
+.dt-container .dt-paging .dt-paging-button {
+    background-color: #f3f6f9 !important; /* Background color */
+    color: #009cff !important; /* Text color */
+    border-radius: 4px; /* Rounded corners */
+    padding: 6px 12px; /* Padding for the buttons */
+    margin: 0 2px; /* Space between buttons */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 50%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+div.dt-container .dt-paging .dt-paging-button {
+    border-radius: 50%;
+}
+
+div.dt-container .dt-paging .dt-paging-button.disabled, div.dt-container .dt-paging .dt-paging-button.disabled:hover, div.dt-container .dt-paging .dt-paging-button.disabled:active {
+    cursor: not-allowed;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: #f3f6f9 !important;
+}
+
+div.dt-container .dt-paging .dt-paging-button.current, div.dt-container .dt-paging .dt-paging-button.current:hover {
+    background-color: #009cff !important; /* Background color on hover */
+    color: #fff !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+/*modal css*/
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-body i.fas.fa-exclamation-circle {
+    color: #f0ad4e; /* Warning color */
+    font-size: 50px;
+}
+

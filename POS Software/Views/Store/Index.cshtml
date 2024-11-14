@@ -1,0 +1,81 @@
+﻿<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Stores Data</h5>
+            <a href="#" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#addStoreModal"><i class="fas fa-plus-circle"></i> &nbsp;Add Store</a>
+           
+            <!-- Modal -->
+            <div class="modal fade" id="addStoreModal" tabindex="-1" aria-labelledby="addStoreModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addStoreModalLabel">Add New Store</h5>
+                            <button type="button" style="box-shadow: none" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="storeName" class="form-label fw-bold ms-1">Name</label>
+                                    <input type="text" class="form-control" id="storeName"
+                                           aria-describedby="nameHelp" placeholder="Store Name">
+                                    @* <div id="nameHelp" class="form-text">We'll never share your email with anyone else.
+                                    </div> *@
+                                </div>
+                                <div class="mb-3">
+                                    <label for="storeManager" class="form-label fw-bold ms-1">Manager</label>
+                                    <input type="text" class="form-control" id="storeManager"
+                                           aria-describedby="managerHelp" placeholder="Manager">
+                                    @* <div id="managerHelp" class="form-text">We'll never share your email with anyone else.
+                                    </div> *@
+                                </div>
+                                <div class="mb-3">
+                                    <label for="storeLocation" class="form-label fw-bold ms-1">Location</label>
+                                    <textarea type="text" class="form-control" id="storeLocation"
+                                           aria-describedby="locationHelp" placeholder="Location"></textarea>
+                                    @* <div id="locationHelp" class="form-text">We'll never share your email with anyone else.
+                                    </div> *@
+                                </div>
+                                <div class="mb-3">
+                                    <label for="storePhone" class="form-label fw-bold ms-1">Mobile Number</label>
+                                    <input type="text" class="form-control" id="storePhone"
+                                           aria-describedby="phoneHelp" pattern="^(013|014|015|016|017|018|019)[0-9]{8}$" title="Please enter a valid 11-digit Bangladeshi phone number starting with a valid operator code (013, 014, 015, 016, 017, 018, or 019)" placeholder="Mobile Number">
+                                    @* <div id="phoneHelp" class="form-text">We'll never share your email with anyone else.
+                                    </div> *@
+                                </div>
+                                <div class="mb-3">
+                                    <label for="storeStatus" class="form-label fw-bold ms-1">Status</label>
+                                    <select class="form-control" id="storeStatus">
+                                        <option disabled selected>Choose...</option>
+                                        <option>Open</option>
+                                        <option>Closed</option>
+                                    </select>
+                                </div>                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                            <button type="button" class="btn btn-success">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Manager</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add table rows here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

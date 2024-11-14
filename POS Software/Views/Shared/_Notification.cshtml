@@ -1,0 +1,69 @@
+﻿@if (TempData["success"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-right", // Position the notification at the top-right
+            "closeButton": true,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000"
+        };
+        toastr.success('@TempData["success"]');
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "closeButton": true,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000"
+        };
+        toastr.error('@TempData["error"]');
+    </script>
+}
+
+<style>
+    /* Style for success notifications */
+    .toast-success {
+        background-color: #28a745 !important; /* Green background */
+        color: #ffffff !important; /* White text */
+    }
+
+        .toast-success .toast-message {
+            font-weight: bold; /* Bold text */
+        }
+
+        .toast-success .toast-icon::before {
+            content: "✔"; /* Check icon */
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+    /* Style for error notifications */
+    .toast-error {
+        background-color: #dc3545 !important; /* Red background */
+        color: #ffffff !important; /* White text */
+    }
+
+        .toast-error .toast-message {
+            font-weight: bold;
+        }
+
+        .toast-error .toast-icon::before {
+            content: "✖"; /* Cross icon */
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+</style>

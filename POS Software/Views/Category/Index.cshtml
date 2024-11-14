@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Category>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Categories Data</h5>
+            <a asp-controller="Category" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#categoryCreateModal">
+                <i class="fas fa-plus-circle"></i> &nbsp;Add Category
+            </a>
+
+            <!-- Modal for Create Category -->
+            <div class="modal fade" id="categoryCreateModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form asp-controller="Category" asp-action="Upsert" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="categoryModalLabel">    
+                                    <span>Add New Category</span>   
+                                </h5>
+                                <button type="button" style="box-shadow: none" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="CategoryName" class="form-label fw-bold ms-1">Category Name</label>
+                                    <input type="text" class="form-control" id="CategoryName" name="CategoryName"
+                                     required placeholder="Category Name" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                <button type="submit" class="btn btn-success btn-no-shadow">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Update Category -->
+            <div class="modal fade" id="categoryUpdateModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form asp-controller="Category" asp-action="Upsert" method="post" id="updateCategoryForm">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="categoryModalLabel">
+                                    <span>Update Category</span>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Hidden Field for Id -->
+                                <input type="hidden" id="updateCategoryId" name="Id" />
+                                <div class="mb-3">
+                                    <label for="updateCategoryName" class="form-label fw-bold ms-1">Category Name</label>
+                                    <input type="text" class="form-control" id="updateCategoryName" name="CategoryName"
+                                           required placeholder="Category Name" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                <button type="submit" class="btn btn-success btn-no-shadow">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Delete Category -->
+            <div class="modal fade" id="categoryDeleteModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center p-4">
+                        <form asp-controller="Category" asp-action="Delete" method="post" id="deleteCategoryForm">
+                            <!-- Icon and Message -->
+                            <div class="modal-body">
+                                <!-- Warning Icon (using Font Awesome) -->
+                                <div class="mb-3">
+                                    <i class="fas fa-exclamation-circle" style="font-size: 50px; color: #f0ad4e;"></i>
+                                </div>
+
+                                <!-- Main Confirmation Message -->
+                                <h5 class="modal-title mb-2" id="categoryModalLabel">Are you sure?</h5>
+
+                                <!-- Subtext -->
+                                <p class="text-muted">You won't be able to revert this!</p>
+
+                                <!-- Hidden Field for Id -->
+                                <input type="hidden" id="deleteCategoryId" name="Id" />
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="modal-footer justify-content-center border-top-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Yes, delete it!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="card-body">
+            <table id="categoryData" class="table table-bordered table-striped" style="width: 100%">
+                <thead class="thead-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Category Name</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/category.js"></script>
+}

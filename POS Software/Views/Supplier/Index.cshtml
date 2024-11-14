@@ -1,0 +1,152 @@
+﻿@model IEnumerable<Supplier>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Suppliers Data</h5>
+            <a asp-controller="Supplier" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#supplierCreateModal">
+                <i class="fas fa-plus-circle"></i> &nbsp;Add Supplier
+            </a>
+
+            <!-- Modal for Create Supplier -->
+            <div class="modal fade" id="supplierCreateModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form asp-controller="Supplier" asp-action="Upsert" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="supplierModalLabel">Add New Supplier</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="SupplierName" class="form-label fw-bold ms-1">Supplier Name</label>
+                                    <input type="text" class="form-control" id="SupplierName" name="SupplierName" required placeholder="Supplier Name" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Company" class="form-label fw-bold ms-1">Company</label>
+                                    <input type="text" class="form-control" id="Company" name="Company" required placeholder="Company" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Email" class="form-label fw-bold ms-1">Email</label>
+                                    <input type="email" class="form-control" id="Email" name="Email" required placeholder="Email" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Phone" class="form-label fw-bold ms-1">Phone</label>
+                                    <input type="tel" class="form-control" id="Phone" name="Phone" required placeholder="Phone" maxlength="15" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Address" class="form-label fw-bold ms-1">Address</label>
+                                    <textarea type="text" class="form-control" id="Address" name="Address" placeholder="Address" maxlength="100"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                <button type="submit" class="btn btn-success btn-no-shadow">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Update Supplier -->
+            <div class="modal fade" id="supplierUpdateModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form asp-controller="Supplier" asp-action="Upsert" method="post" id="updateSupplierForm">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="supplierModalLabel">Update Supplier</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Hidden Field for Id -->
+                                <input type="hidden" id="updateSupplierId" name="Id" />
+
+                                <div class="mb-3">
+                                    <label for="updateSupplierName" class="form-label fw-bold ms-1">Supplier Name</label>
+                                    <input type="text" class="form-control" id="updateSupplierName" name="SupplierName" required placeholder="Supplier Name" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="updateCompany" class="form-label fw-bold ms-1">Company</label>
+                                    <input type="text" class="form-control" id="updateCompany" name="Company" required placeholder="Company" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="updateEmail" class="form-label fw-bold ms-1">Email</label>
+                                    <input type="email" class="form-control" id="updateEmail" name="Email" required placeholder="Email" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="updatePhone" class="form-label fw-bold ms-1">Phone</label>
+                                    <input type="tel" class="form-control" id="updatePhone" name="Phone" required placeholder="Phone" maxlength="15" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="updateAddress" class="form-label fw-bold ms-1">Address</label>
+                                    <input type="text" class="form-control" id="updateAddress" name="Address" placeholder="Address" maxlength="100" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                <button type="submit" class="btn btn-success btn-no-shadow">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Delete Supplier -->
+            <div class="modal fade" id="supplierDeleteModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center p-4">
+                        <form asp-controller="Supplier" asp-action="Delete" method="post" id="deleteSupplierForm">
+                            <!-- Icon and Message -->
+                            <div class="modal-body">
+                                <!-- Warning Icon (using Font Awesome) -->
+                                <div class="mb-3">
+                                    <i class="fas fa-exclamation-circle" style="font-size: 50px; color: #f0ad4e;"></i>
+                                </div>
+
+                                <!-- Main Confirmation Message -->
+                                <h5 class="modal-title mb-2" id="supplierModalLabel">Are you sure?</h5>
+
+                                <!-- Subtext -->
+                                <p class="text-muted">You won't be able to revert this!</p>
+
+                                <!-- Hidden Field for Supplier Id -->
+                                <input type="hidden" id="deleteSupplierId" name="Id" />
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="modal-footer justify-content-center border-top-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Yes, delete it!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+            <table id="supplierData" class="table table-bordered table-striped" style="width: 100%">
+                <thead class="thead-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Reg. Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/supplier.js"></script>
+}
