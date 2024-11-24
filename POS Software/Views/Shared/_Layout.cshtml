@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,6 +21,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- Animated Css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <!-- DataTable -->
     <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
 
@@ -28,6 +36,7 @@
 <body>
 
     <div class="container-xxl position-relative bg-white d-flex p-0">
+
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -35,127 +44,164 @@
             </div>
         </div>
         <!-- Spinner End -->
-        <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-light navbar-light">
-                <a asp-controller="Home" asp-action="Index" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>POS Software</h3>
-                </a>
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="position-relative">
-                        <img class="rounded-circle" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
-                    </div>
-                </div>
-                <div class="navbar-nav w-100">
-                    <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a asp-controller="Store" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-store"></i> Stores</a>
-                    <a asp-controller="Category" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="far fa-list-alt"></i> Categories</a>
-                    <a asp-controller="Supplier" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supplier" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fa fa-user-tie"></i> Suppliers</a>
-                    @* <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Elements</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item">Buttons</a>
-                            <a href="typography.html" class="dropdown-item">Typography</a>
-                            <a href="element.html" class="dropdown-item">Other Elements</a>
-                        </div>
-                    </div> *@
-                </div>
-            </nav>
-        </div>
-        <!-- Sidebar End -->
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
-                </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
-                <div class="navbar-nav align-items-center ms-auto">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-envelope me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Message</span>
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (SignInManager.IsSignedIn(User)){
+                <!-- Sidebar Start -->
+                <div class="sidebar pe-4 pb-3">
+                    <nav class="navbar bg-light navbar-light">
+                        <a asp-controller="Home" asp-action="Index" class="navbar-brand mx-4 mb-3">
+                            <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>POS Software</h3>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Navbar End -->
+                        <div class="d-flex align-items-center ms-4 mb-4">
+                            <div class="position-relative">
+                                <img class="rounded-circle" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">@((await UserManager.GetUserAsync(User))?.Name ?? "Name not set")</h6>
+                                @if (User != null)
+                                {
+                                    // Get the ApplicationUser instance
+                                    var appUser = await UserManager.GetUserAsync(User);
 
-            @* Main Body Start *@
+                                    // If ApplicationUser is found, get roles
+                                    if (appUser != null)
+                                    {
+                                        var roles = await UserManager.GetRolesAsync(appUser);
+                                        <span>@(roles.Any() ? string.Join(", ", roles) : "No role assigned")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No user found</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>No user found</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="navbar-nav w-100">
+                            <a asp-controller="Home" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                            @if (User.IsInRole(SD.Role_Admin))
+                            {
+                                <a asp-controller="User" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-users"></i> Users</a>
+                                <a asp-controller="Store" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-store"></i> Stores</a>
+                                <a asp-controller="Category" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="far fa-list-alt"></i> Categories</a>                                
+                            }
+                            <a asp-controller="Supplier" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supplier" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fa fa-user-tie"></i> Suppliers</a>
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </nav>
+                </div>
+                <!-- Sidebar End -->
+                <!-- Content Start -->
+                <div class="content">
+                    <!-- Navbar Start -->
+                    <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                        <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                            <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                        </a>
+                        <a href="#" class="sidebar-toggler flex-shrink-0">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <form class="d-none d-md-flex ms-4">
+                            <input class="form-control border-0" type="search" placeholder="Search">
+                        </form>
+                        <div class="navbar-nav align-items-center ms-auto">
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="fa fa-envelope me-lg-2"></i>
+                                    <span class="d-none d-lg-inline-flex">Message</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                                    <a href="#" class="dropdown-item">
+                                        <div class="d-flex align-items-center">
+                                            <img class="rounded-circle" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                            <div class="ms-2">
+                                                <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                                <small>15 minutes ago</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <hr class="dropdown-divider">
+                                </div>
+                            </div>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="fa fa-bell me-lg-2"></i>
+                                    <span class="d-none d-lg-inline-flex">Notificatin</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                                    <a href="#" class="dropdown-item">
+                                        <h6 class="fw-normal mb-0">Profile updated</h6>
+                                        <small>15 minutes ago</small>
+                                    </a>
+                                    <hr class="dropdown-divider">
+                                </div>
+                            </div>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                    <img class="rounded-circle me-lg-2" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <span class="d-none d-lg-inline-flex">@((await UserManager.GetUserAsync(User))?.Name ?? "Name not set")</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                                    <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" class="dropdown-item">My Profile</a>
+                                    <a href="#" class="dropdown-item">Settings</a>
+                                    @* <a id="logout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-item">Log Out</a> *@
+                                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <button id="logout" type="submit" style="padding: .25rem 1rem; color: #212529; background-color: #f3f6f9;" class="border-0">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <!-- Navbar End -->
+
+                    @* Main Body Start *@
+                    <div class="container-fluid pt-4 px-4">
+                        <div class="row g-4">
+                            <partial name="_Notification" />
+                            @RenderBody()
+                        </div>
+                    </div>
+                    @* Main Body End *@
+
+                    <!-- Footer Start -->
+                    <div class="container-fluid pt-4 px-4">
+                        <div class="bg-light rounded-top p-4">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 text-center text-sm-start">
+                                    &copy; <a href="#">POS Software</a>, All Right Reserved.
+                                </div>
+                                <div class="col-12 col-sm-6 text-center text-sm-end">
+                                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                                    Designed By <a href="https://marufhasnat.github.io/portfolio/" target="_blank">Maruf Hasnat</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer End -->
+                </div>
+                <!-- Content End -->
+            }            
+            <!-- Back to Top -->
+            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+        }
+        else
+        {
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     <partial name="_Notification" />
+                    <partial name="_LoginPartial" />
                     @RenderBody()
                 </div>
             </div>
-            @* Main Body End *@
-
-            <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">POS Software</a>, All Right Reserved.
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://marufhasnat.github.io/portfolio/" target="_blank">Maruf Hasnat</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Footer End -->
-        </div>
-        <!-- Content End -->
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        }
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

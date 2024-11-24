@@ -13,6 +13,16 @@
     z-index: 99;
 }
 
+.no-hover {
+    text-decoration: none; /* Remove underline */
+}
+
+    .no-hover:hover {
+        text-decoration: none; /* Ensure no hover underline */
+        color: white; /* Prevent color change */
+        cursor: default; /* Prevent pointer cursor if needed */
+    }
+
 /*** Spinner ***/
 #spinner {
     opacity: 0;
@@ -123,6 +133,11 @@
     }
 }
 
+@media (max-width: 767px){
+    .mt-20{
+        margin-top: 20px;
+    }
+}
 
 /*** Navbar ***/
 .sidebar .navbar .navbar-nav .nav-link {

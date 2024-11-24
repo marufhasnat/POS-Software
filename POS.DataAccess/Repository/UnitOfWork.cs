@@ -13,12 +13,16 @@ namespace POS.DataAccess.Repository
         private readonly ApplicationDbContext _db;
         public ICategoryRepository Category { get; private set; }
         public ISupplierRepository Supplier { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IStoreRepository Store { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db) 
         {
             _db = db;
             Category = new CategoryRepository(_db);
             Supplier = new SupplierRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
+            Store = new StoreRepository(_db);
         }
 
         public void Save()

@@ -10,6 +10,8 @@ namespace POS.DataAccess.Repository.IRepository
     {
         ICategoryRepository Category { get; }
         ISupplierRepository Supplier { get; }
+        IApplicationUserRepository ApplicationUser { get; }
+        IStoreRepository Store { get; }
 
         void Save();
     }

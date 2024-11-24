@@ -5,3 +5,39 @@ Errors:
 2. Areas need to create by add scafolding in project and defining in Controller and Program.cs
 
 3. Install Microsoft.EntityFrameworkCore.Design in Startup Main Project to add-migration from DataAccess
+
+4. When I install Identity scafolding in Startup Main Project then there they add a Areas => Identity => Data=> ApplicationDbContext which need to delete for using DataAccess ApplicationDbContext
+
+5. We need to add app.UseAuthentication(); in Program.cs
+
+6. We need to remove "ApplicationDbContextConnection": "Server=(localdb)\\mssqllocaldb;Database=POS Software;Trusted_Connection=True;MultipleActiveResultSets=true" in appsettings.json
+
+7. Now we need to change the Areas => Identity => Pages => Account => Login.cshtml
+
+8. We need to add builder.Services.AddRazorPages(); & app.MapRazorPages(); in Program.cs file to deal with Login as it is designed in Razor Page
+
+9. Now we need to type in package.console add-migration AddIdentityTables and update-database as it is already created while downloading Indentity and of course it need to add in DataAccess
+
+10. Now we need to create a model named ApplicationUser.cs to add more fields of Default User
+
+11. ApplicationUser : IdentityUser, here, we need to install Indentity.Stores
+
+12. Now we need to set the DB of ApplicationUser in ApplicationDbContext
+
+13. Now we need to type in package.console add-migration ExtendIdentityTUser and update-database
+
+14. Now we need to go to Register.cshtml.cs and in CreateUser method we need to change it into ApplicationUser
+
+15. To add role we need to add builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>(); in Program.cs
+
+16. We need to add private readonly RoleManager<IdentityRole> _roleManager; in Register.cshtml.cs
+
+17. Now we need to edit OnGetAsync method in Register.cshtml.cs and we don't need to add any unitofwork or dbchanges as we are using CreateAsync
+
+18. After adding EmailSender.cs in model, we need to register in Program.cs
+
+19. We need to edit to in Program.cs to handle the error of email sender: builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+20. 
+
+

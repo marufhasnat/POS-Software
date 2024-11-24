@@ -51,7 +51,7 @@ function loadCategoryTable() {
                 "render": function (data, type, row) {
                     return `<div class="d-flex justify-content-center">
                                 <div class="w-75 btn-group" role="group">
-                                    <button onclick="openUpdateModal('${data}')"
+                                    <button onclick="openUpdateModal('${data}', '${row.categoryName}')"
                                             class="btn btn-warning text-white btn-no-shadow me-2" data-bs-toggle="modal" data-bs-target="#categoryUpdateModal">
                                        <i class="fas fa-edit"></i> &nbsp;Edit
                                     </button>

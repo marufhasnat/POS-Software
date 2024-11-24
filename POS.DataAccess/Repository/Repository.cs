@@ -44,6 +44,11 @@ namespace POS.DataAccess.Repository
 
         public IEnumerable<T> GetAll(string? includeProperties = null)
         {
+            if (dbSet == null)
+            {
+                throw new InvalidOperationException("dbSet is not initialized. Ensure it is properly configured.");
+            }
+
             IQueryable<T> query = dbSet;
 
             if (!string.IsNullOrEmpty(includeProperties))

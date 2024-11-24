@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using POS.DataAccess.Repository.IRepository;
 using POS.Models;
+using POS.Utility;
 
 namespace POS_Software.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
     public class SupplierController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -51,10 +54,10 @@ namespace POS_Software.Controllers
             }
 
             // Check for existing supplier with the same name and different ID to avoid duplicates
-            var existingSupplierWithSameName = _unitOfWork.Supplier.Get(s => s.SupplierName == supplier.SupplierName && s.Id != supplier.Id);
-            if (existingSupplierWithSameName != null)
+            var existingSupplierWithSameCompany = _unitOfWork.Supplier.Get(s => s.Company == supplier.Company && s.Id != supplier.Id);
+            if (existingSupplierWithSameCompany != null)
             {
-                TempData["error"] = "A supplier with the same name already exists.";
+                TempData["error"] = "A supplier with the same company already exists.";
                 return RedirectToAction("Index");
             }
 
@@ -111,7 +114,7 @@ namespace POS_Software.Controllers
             _unitOfWork.Supplier.Remove(supplierToBeDeleted);
             _unitOfWork.Save();
 
-            TempData["success"] = "Supplier deleted successfully";
+            TempData["success"] = "Supplier deleted successfully.";
             return RedirectToAction("Index");
         }
 

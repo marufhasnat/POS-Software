@@ -1,0 +1,91 @@
+﻿﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (!SignInManager.IsSignedIn(User)){
+    <div class="container my-5" id="login-section">
+        <div class="logo-container text-center">
+            <img src="~/img/logo.png" class="img-fluid" style="max-width: 200px;" alt="logo" />
+        </div>
+        <h2 class="text-center mb-4">Welcome to POS Software</h2>
+        <div class="row">
+            <!-- Manager Section -->
+            <div class="col-md-6">
+                <div class="card p-4 text-center" style="background-color: #E0F7FF;">
+                    <span class="badge bg-primary text-uppercase p-3 fs-6">
+                        <i class="fas fa-briefcase"></i>
+                        Manager
+                    </span>
+                    <h3 class="mt-3" style="color: #009CFF;">For Manager</h3>
+                    <p>Manage operations and oversee transactions for the POS system.</p>
+                    <div class="text-center">
+                        <a id="login-button" asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary w-50 btn-no-shadow" style="background-color: #009CFF; border: none;">Login</a>
+                    </div>
+                    <p class="mt-2">Don't have an account? <a id="manager-signup" href="javascript:void(0);" class="text-primary" style="color: #009CFF;">Sign Up</a></p>
+                </div>
+            </div>
+
+            <!-- Cashier Section -->
+            <div class="col-md-6 mt-20">
+                <div class="card p-4 text-center" style="background-color: #F8F8F8;">
+                    <span class="badge bg-secondary text-uppercase p-3 fs-6">
+                        <i class="fas fa-cash-register"></i>
+                        Cashier
+                    </span>
+                    <h3 class="mt-3" style="color: #009CFF;">For Cashier</h3>
+                    <p>Process transactions and manage sales efficiently in the POS system.</p>
+                    <div class="text-center">
+                        <a id="login-button" asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary btn-no-shadow w-50" style="color: #009CFF; background-color: transparent; border-color: #009CFF; transition: all 0.3s;" onmouseover="this.style.color='white'; this.style.backgroundColor='#009CFF';" onmouseout="this.style.color='#009CFF'; this.style.backgroundColor='transparent';">Login</a>
+                    </div>
+                    <p class="mt-2">Don't have an account? <a id="cashier-signup" href="javascript:void(0);" class="text-primary" style="color: #009CFF;">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginSection = document.getElementById('login-section');
+            const managerSignup = document.getElementById('manager-signup');
+            const cashierSignup = document.getElementById('cashier-signup');
+            const loginButtons = document.querySelectorAll('#login-button');
+
+            // Check if the user is on the Register or Login page
+            const isActionPage = window.location.pathname.includes("/Account/Register") || window.location.pathname.includes("/Account/Login");
+
+            // Hide the login section if on an action page
+            if (isActionPage) {
+                loginSection.style.display = 'none';
+            }
+
+            // Handle Sign Up click for Manager
+            managerSignup.addEventListener('click', function () {
+                loginSection.style.display = 'none';
+                window.location.href = '/Identity/Account/Register?role=Manager';
+            });
+
+            // Handle Sign Up click for Cashier
+            cashierSignup.addEventListener('click', function () {
+                loginSection.style.display = 'none';
+                window.location.href = '/Identity/Account/Register?role=Cashier';
+            });
+
+            // Handle Login button click
+            loginButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default navigation
+                    loginSection.style.display = 'none';
+                    window.location.href = '/Identity/Account/Login';
+                });
+            });
+
+            // Handle back button or page reload
+            window.addEventListener('popstate', function () {
+                if (!window.location.pathname.includes("/Account/Register") && !window.location.pathname.includes("/Account/Login")) {
+                    loginSection.style.display = 'block';
+                }
+            });
+        });
+    </script>
+}
