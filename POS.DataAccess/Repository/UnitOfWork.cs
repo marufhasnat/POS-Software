@@ -15,6 +15,7 @@ namespace POS.DataAccess.Repository
         public ISupplierRepository Supplier { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
         public IStoreRepository Store { get; private set; }
+        public IProductRepository Product { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db) 
         {
@@ -23,6 +24,7 @@ namespace POS.DataAccess.Repository
             Supplier = new SupplierRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
             Store = new StoreRepository(_db);
+            Product = new ProductRepository(_db);
         }
 
         public void Save()

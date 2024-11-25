@@ -1,0 +1,310 @@
+﻿@model ProductViewModel
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Products Data</h5>
+            <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#productCreateModal">
+                <i class="fas fa-plus-circle"></i> &nbsp;Add Product
+            </a>
+
+            <!-- Create Product Modal -->
+            <div class="modal fade" id="productCreateModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <form asp-controller="Product" asp-action="Upsert" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productModalLabel">Add Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <!-- Product Batch -->
+                                    <div class="col-md-6">
+                                        <label for="ProductBatch" class="form-label fw-bold">Product Batch</label>
+                                        <input type="text" class="form-control" id="ProductBatch" name="Product.Batch" placeholder="Product Batch" required />
+                                    </div>
+
+                                    <!-- Product Name -->
+                                    <div class="col-md-6">
+                                        <label for="ProductName" class="form-label fw-bold">Product Name</label>
+                                        <input type="text" class="form-control" id="ProductName" name="Product.Name" placeholder="Product Name" required />
+                                    </div>
+
+                                    <!-- Product Description -->
+                                    <div class="col-md-12">
+                                        <label for="ProductDescription" class="form-label fw-bold">Product Description</label>
+                                        <textarea class="form-control" id="ProductDescription" name="Product.Description" rows="2" placeholder="Product Description" required></textarea>
+                                    </div>
+
+                                    <!-- Cost Price -->
+                                    <div class="col-md-6">
+                                        <label for="CostPrice" class="form-label fw-bold">Cost Price</label>
+                                        <input type="number" class="form-control" id="CostPrice" name="Product.CostPrice" placeholder="Cost Price" required />
+                                    </div>
+
+                                    <!-- Selling Price -->
+                                    <div class="col-md-6">
+                                        <label for="SellingPrice" class="form-label fw-bold">Selling Price</label>
+                                        <input type="number" class="form-control" id="SellingPrice" name="Product.SellPrice" placeholder="Selling Price" required />
+                                    </div>
+
+                                    <!-- Quantity (Cartons) -->
+                                    <div class="col-md-6">
+                                        <label for="Quantity" class="form-label fw-bold">Qty (Cartons)</label>
+                                        <input type="number" class="form-control" id="Quantity" name="Product.Quantity" placeholder="Qty (Cartons)" required />
+                                    </div>
+
+                                    <!-- Supplier -->
+                                    <div class="col-md-6">
+                                        <label for="SupplierId" class="form-label fw-bold">Supplier</label>
+                                        <select class="form-select" id="SupplierId" name="SupplierId" required>
+                                            <option value="" selected disabled>-- Select Supplier --</option>
+                                            @foreach (var supplier in Model.Suppliers)
+                                            {
+                                                <option value="@supplier.Value">@supplier.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Category -->
+                                    <div class="col-md-6">
+                                        <label for="CategoryId" class="form-label fw-bold">Category</label>
+                                        <select class="form-select" id="CategoryId" name="CategoryId" required>
+                                            <option value="" selected disabled>-- Select Category --</option>
+                                            @foreach (var category in Model.Categories)
+                                            {
+                                                <option value="@category.Value">@category.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Store -->
+                                    <div class="col-md-6">
+                                        <label for="StoreId" class="form-label fw-bold">Warehouse</label>
+                                        <select class="form-select" id="StoreId" name="StoreId" required>
+                                            <option value="" selected disabled>-- Select Warehouse --</option>
+                                            @foreach (var store in Model.Stores)
+                                            {
+                                                <option value="@store.Value">@store.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- MFT Date -->
+                                    <div class="col-md-6">
+                                        <label for="MFTDate" class="form-label fw-bold">MFT Date</label>
+                                        <input type="date" class="form-control" id="MFTDate" name="Product.ManufactureDate" required />
+                                    </div>
+
+                                    <!-- Expiry Date -->
+                                    <div class="col-md-6">
+                                        <label for="ExpiryDate" class="form-label fw-bold">Expiry Date</label>
+                                        <input type="date" class="form-control" id="ExpiryDate" name="Product.ExpiryDate" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Product Modal -->
+            <div class="modal fade" id="productUpdateModal" tabindex="-1" aria-labelledby="productUpdateModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <form asp-controller="Product" asp-action="Upsert" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productUpdateModalLabel">Update Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <!-- Hidden Field for Product ID -->
+                                    <input type="hidden" id="updateProductId" name="Product.Id" />
+
+                                    <!-- Product Batch -->
+                                    <div class="col-md-6">
+                                        <label for="updateProductBatch" class="form-label fw-bold">Product Batch</label>
+                                        <input type="text" class="form-control" id="updateProductBatch" name="Product.Batch" placeholder="Product Batch" />
+                                    </div>
+
+                                    <!-- Product Name -->
+                                    <div class="col-md-6">
+                                        <label for="updateProductName" class="form-label fw-bold">Product Name</label>
+                                        <input type="text" class="form-control" id="updateProductName" name="Product.Name" placeholder="Product Name" />
+                                    </div>
+
+                                    <!-- Product Description -->
+                                    <div class="col-md-12">
+                                        <label for="updateProductDescription" class="form-label fw-bold">Product Description</label>
+                                        <textarea class="form-control" id="updateProductDescription" name="Product.Description" rows="2" placeholder="Product Description"></textarea>
+                                    </div>
+
+                                    <!-- Cost Price -->
+                                    <div class="col-md-6">
+                                        <label for="updateCostPrice" class="form-label fw-bold">Cost Price</label>
+                                        <input type="number" class="form-control" id="updateCostPrice" name="Product.CostPrice" placeholder="Cost Price" />
+                                    </div>
+
+                                    <!-- Selling Price -->
+                                    <div class="col-md-6">
+                                        <label for="updateSellPrice" class="form-label fw-bold">Selling Price</label>
+                                        <input type="number" class="form-control" id="updateSellPrice" name="Product.SellPrice" placeholder="Selling Price" />
+                                    </div>
+
+                                    <!-- Quantity (Cartons) -->
+                                    <div class="col-md-6">
+                                        <label for="updateQuantity" class="form-label fw-bold">Qty (Cartons)</label>
+                                        <input type="number" class="form-control" id="updateQuantity" name="Product.Quantity" placeholder="Quantity" />
+                                    </div>
+
+                                    <!-- Supplier -->
+                                    <div class="col-md-6">                                        
+                                        <label for="updateSupplierId" class="form-label fw-bold ms-1">Supplier</label>
+                                        <select class="form-select" id="updateSupplierId" name="SupplierId" aria-label="Supplier">
+                                            <option value="" disabled>-- Select Supplier --</option>
+                                            @foreach (var supplier in Model.Suppliers)
+                                            {
+                                                if (Model.SupplierId.ToString() == supplier.Value)
+                                                {
+                                                    <option value="@supplier.Value" selected="selected">
+                                                        @supplier.Text
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@supplier.Value">
+                                                        @supplier.Text
+                                                    </option>
+                                                }
+                                            }
+
+                                        </select>
+                                        <span asp-validation-for="SupplierId" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Category -->
+                                    <div class="col-md-6">                                        
+                                        <label for="updateCategoryId" class="form-label fw-bold ms-1">Category</label>
+                                        <select class="form-select" id="updateCategoryId" name="CategoryId" aria-label="Category">
+                                            <option value="" disabled>-- Select Category --</option>
+                                            @foreach (var category in Model.Categories)
+                                            {
+                                                if (Model.CategoryId.ToString() == category.Value)
+                                                {
+                                                    <option value="@category.Value" selected="selected">
+                                                        @category.Text
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@category.Value">
+                                                        @category.Text
+                                                    </option>
+                                                }
+                                            }
+
+                                        </select>
+                                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Store -->
+                                    <div class="col-md-6">                      
+                                        <label for="updateStoreId" class="form-label fw-bold ms-1">Store</label>
+                                        <select class="form-select" id="updateStoreId" name="StoreId" aria-label="Store">
+                                            <option value="" disabled>-- Select Category --</option>
+                                            @foreach (var store in Model.Stores)
+                                            {
+                                                if (Model.StoreId.ToString() == store.Value)
+                                                {
+                                                    <option value="@store.Value" selected="selected">
+                                                        @store.Text
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@store.Value">
+                                                        @store.Text
+                                                    </option>
+                                                }
+                                            }
+
+                                        </select>
+                                        <span asp-validation-for="StoreId" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- MFT Date -->
+                                    <div class="col-md-6">
+                                        <label for="updateMFTDate" class="form-label fw-bold">MFT Date</label>
+                                        <input type="date" class="form-control" id="updateMFTDate" name="Product.ManufactureDate" />
+                                    </div>
+
+                                    <!-- Expiry Date -->
+                                    <div class="col-md-6">
+                                        <label for="updateExpiryDate" class="form-label fw-bold">Expiry Date</label>
+                                        <input type="date" class="form-control" id="updateExpiryDate" name="Product.ExpiryDate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Product Modal -->
+            <div class="modal fade" id="productDeleteModal" tabindex="-1" aria-labelledby="productDeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center p-4">
+                        <form asp-controller="Product" asp-action="Delete" method="post">
+                            <div class="modal-body">
+                                <i class="fas fa-exclamation-circle" style="font-size: 50px; color: #f0ad4e;"></i>
+                                <h5 class="modal-title mb-2" id="productDeleteModalLabel">Are you sure?</h5>
+                                <p class="text-muted">You won't be able to revert this!</p>
+                                <input type="hidden" id="deleteProductId" name="Id" />
+                            </div>
+                            <div class="modal-footer justify-content-center border-top-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Yes, delete it!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+        
+        <div class="scrollable-table">
+            <table id="productData" class="table table-bordered table-striped" style="width: 100%; min-width: 1200px;">
+                <thead class="thead-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Expire</th>
+                        <th>Price</th>
+                        <th>In Stock</th>
+                        <th>Store</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/product.js"></script>
+}

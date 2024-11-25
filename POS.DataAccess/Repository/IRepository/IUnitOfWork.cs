@@ -12,6 +12,7 @@ namespace POS.DataAccess.Repository.IRepository
         ISupplierRepository Supplier { get; }
         IApplicationUserRepository ApplicationUser { get; }
         IStoreRepository Store { get; }
+        IProductRepository Product { get; }
 
         void Save();
     }

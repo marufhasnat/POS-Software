@@ -99,10 +99,10 @@ namespace POS_Software.Areas.Admin.Controllers
             // Validate the model
             if (!ModelState.IsValid)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage); // Log errors to debug
-                }
+                //foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                //{
+                //    Console.WriteLine(error.ErrorMessage); // Log errors to debug
+                //}
                 TempData["error"] = "Invalid store data. Please check the inputs.";
                 return RedirectToAction("Index");
             }
