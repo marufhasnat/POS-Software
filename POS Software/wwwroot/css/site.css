@@ -23,6 +23,16 @@
         cursor: default; /* Prevent pointer cursor if needed */
     }
 
+#clearSearch {
+    color: gray;
+    font-weight: bold;
+    user-select: none;
+}
+
+    #clearSearch:hover {
+        color: black;
+    }
+
 /*** Spinner ***/
 #spinner {
     opacity: 0;

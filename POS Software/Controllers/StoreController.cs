@@ -209,7 +209,7 @@ namespace POS_Software.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             // Fetch stores and include related 'Manager' and 'Cashier' using Include
-            var objStoreList = _unitOfWork.Store.GetAll("Manager,Cashier").ToList(); // Get data as IQueryable and include relationships
+            var objStoreList = _unitOfWork.Store.GetAll(includeProperties: "Manager,Cashier").ToList(); // Get data as IQueryable and include relationships
 
             // Return the data as JSON
             return Json(new { data = objStoreList });

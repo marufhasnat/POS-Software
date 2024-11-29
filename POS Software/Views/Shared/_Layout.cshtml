@@ -59,7 +59,7 @@
                                 <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                             </div>
                             <div class="ms-3">
-                                <h6 class="mb-0">@((await UserManager.GetUserAsync(User))?.Name ?? "Name not set")</h6>
+                                <h6 class="mb-0">@((await UserManager.GetUserAsync(User))?.Name ?? "User")</h6>
                                 @if (User != null)
                                 {
                                     // Get the ApplicationUser instance
@@ -92,6 +92,13 @@
                             }
                             <a asp-controller="Supplier" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supplier" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fa fa-user-tie"></i> Suppliers</a>
                             <a asp-controller="Product" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-box-open"></i> Products</a>
+                            @if (User.IsInRole(SD.Role_Cashier))
+                            {
+                                <a asp-controller="POS" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "POS" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-shopping-cart"></i> POS</a>
+                            }
+                            <a asp-controller="OrderList" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "OrderList" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-file-invoice-dollar"></i> Orders</a>
+                            <a asp-controller="Report" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-chart-pie"></i> Reports</a>
+                            <a asp-controller="CreditSale" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CreditSale" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-credit-card"></i> Credit Sales</a>
                             <partial name="_LoginPartial" />
                         </div>
                     </nav>
@@ -149,7 +156,6 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                                     <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" class="dropdown-item">My Profile</a>
-                                    <a href="#" class="dropdown-item">Settings</a>
                                     @* <a id="logout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-item">Log Out</a> *@
                                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                         <button id="logout" type="submit" style="padding: .25rem 1rem; color: #212529; background-color: #f3f6f9;" class="border-0">
@@ -176,7 +182,7 @@
                         <div class="bg-light rounded-top p-4">
                             <div class="row">
                                 <div class="col-12 col-sm-6 text-center text-sm-start">
-                                    &copy; <a href="#">POS Software</a>, All Right Reserved.
+                                    &copy; <a asp-controller="Home" asp-action="Index">POS Software</a>, All Right Reserved.
                                 </div>
                                 <div class="col-12 col-sm-6 text-center text-sm-end">
                                     <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
@@ -207,6 +213,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/chart/chart.min.js"></script>
     <script src="~/js/easing/easing.js"></script>
     <script src="~/js/waypoints/waypoints.min.js"></script>
     <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js" asp-append-version="true"></script>

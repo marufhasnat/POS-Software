@@ -1,0 +1,111 @@
+﻿@model OrderViewModel
+
+<div class="container my-4">
+    <!-- Form to Submit Data -->
+    <form id="posForm" asp-controller="POS" asp-action="Create" method="post">
+        <!-- Customer Details -->
+        <div class="row my-2">
+            <div class="col-md-6">
+                <label for="customerName" class="form-label fw-bold">Customer Name</label>
+                <input type="text" class="form-control" id="customerName" name="Order.CustomerName" placeholder="Enter customer name" required />
+            </div>
+            <div class="col-md-6">
+                <label for="phone" class="form-label fw-bold">Phone</label>
+                <input type="text" class="form-control" id="phone" name="Order.Phone" placeholder="Enter phone number" required />
+            </div>
+            <div class="col-md-6 mt-3">
+                <label for="email" class="form-label fw-bold">Email</label>
+                <input type="email" class="form-control" id="email" name="Order.Email" placeholder="Enter email" required />
+            </div>
+            <div class="col-md-6 mt-3">
+                <label for="product" class="form-label fw-bold">Product >> Category</label>
+                <select id="product" class="form-select" name="OrderItem.ProductId" required>
+                    <option value="" selected disabled>Select Product >> Category</option>    
+                </select>
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div class="card mt-5">
+            <div class="card-header bg-primary">
+                <h5 class="text-white">Shopping Cart</h5>
+            </div>
+            <div class="card-body">
+                <div class="scrollable-table">
+                    <!-- Cart Table -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Stock Qty</th>
+                                <th>Unit Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTable">
+                            <!-- Dynamic Rows -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-2">
+                    <h4>Grand Total: <span id="grandTotal">0</span></h4>
+                    <input type="hidden" name="Order.TotalAmount" id="hiddenGrandTotal" value="0">
+                    <hr />
+                    <h4>Final Total: <span id="finalTotal">0</span></h4>
+                    <input type="hidden" name="Order.PayableAmount" id="hiddenFinalTotal" value="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Add to Cart Button -->
+        <button type="button" id="addToCart" class="btn btn-success my-4 btn-no-shadow"><i class="fas fa-plus-circle"></i> Add To Cart</button>
+
+        <div class="row my-4">
+            <!-- Apply Discount Section -->
+            <div class="col-md-4">
+                <label for="discount" class="form-label">Discount (%)</label>
+                <input type="text" class="form-control" id="discount" name="Order.Discount" placeholder="Discount e.g., 4">
+                <button type="button" id="applyDiscount" class="btn text-white btn-warning btn-no-shadow my-4"><i class="fas fa-percentage"></i> Apply Discount</button>
+            </div>
+            <!-- Payment Method -->
+            <div class="col-md-4">
+                <label for="paymentMode" class="form-label">Payment Method</label>
+                <select id="paymentMode" class="form-select" name="Order.PaymentMode" required>
+                    <option value="" selected disabled>-- Select Payment Method --</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="POS">POS</option>
+                    <option value="Cheque">Cheque</option>
+                </select>
+            </div>
+            <!-- Payment Section -->
+            <div class="col-md-4">
+                <label for="amountPaid" class="form-label">Amount Paid</label>
+                <input type="text" class="form-control" id="amountPaid" name="Order.PaidAmount" step="0.01" placeholder="Enter paid amount" required />
+            </div>
+        </div>
+
+        <!-- Generate Invoice Button -->
+        <!-- Generate Invoice and Clear Button -->
+        <div class="d-flex gap-2">
+            <button type="submit" id="generateInvoice" class="btn btn-dark btn-no-shadow my-4">
+                <i class="fas fa-wallet"></i> Generate Invoice Number
+            </button>
+            <button type="button" id="clearForm" class="btn btn-danger btn-no-shadow my-4">
+                <i class="fas fa-times-circle"></i> Clear
+            </button>
+        </div>
+
+        <input type="hidden" name="Order.InvoiceNumber" id="hiddenInvoiceNumber" />
+
+        <!-- Hidden Fields -->
+        <input type="hidden" name="CartData" id="cartData" />
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/pos.js"></script>
+}

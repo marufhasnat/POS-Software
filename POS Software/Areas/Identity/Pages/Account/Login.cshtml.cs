@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using POS.Models;
+using Microsoft.EntityFrameworkCore;
+using POS.DataAccess.Repository.IRepository;
 
 namespace POS_Software.Areas.Identity.Pages.Account
 {
@@ -23,12 +25,14 @@ namespace POS_Software.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -116,13 +120,34 @@ namespace POS_Software.Areas.Identity.Pages.Account
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (user != null)
                 {
-                    var roles = await _userManager.GetRolesAsync(user); // Assuming GetUserRoles returns roles for the user
+                    var roles = await _userManager.GetRolesAsync(user);
 
                     // Check if the user is a Manager or Cashier
-                    if ((roles.Contains("Manager") || roles.Contains("Cashier")) && !user.Status)
+                    if ((roles.Contains("Manager") || roles.Contains("Cashier")))
                     {
-                        TempData["error"] = "Account is not active";
-                        return RedirectToPage("./Login");
+                        // Check if the user is assigned to any store
+                        var assignedStore = _unitOfWork.Store.Get(s => s.ManagerId == user.Id || s.CashierId == user.Id);
+
+                        if (assignedStore == null)
+                        {
+                            // User is not assigned to any store
+                            TempData["error"] = "Sorry! You are not assigned to any store.";
+                            return RedirectToPage("./Login");
+                        }
+
+                        if (!assignedStore.Status)
+                        {
+                            // Store is assigned but not active
+                            TempData["error"] = "Sorry! The store is closed now.";
+                            return RedirectToPage("./Login");
+                        }
+
+
+                        if (!user.Status)
+                        {
+                            TempData["error"] = "Account is not active.";
+                            return RedirectToPage("./Login");
+                        }
                     }
 
                     // Check for Admins

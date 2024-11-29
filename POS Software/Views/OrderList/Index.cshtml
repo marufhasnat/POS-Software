@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Order>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Orders Data</h5>           
+        </div>
+
+        <div class="scrollable-table">
+            <table id="orderData" class="table table-bordered table-striped" style="width: 100%; min-width: 1200px;">
+                <thead class="thead-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Invoice</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Total</th>
+                        <th>Discount(%)</th>
+                        <th>Payable</th>
+                        <th>Paid</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Cashier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/orderList.js"></script>
+}

@@ -1,0 +1,64 @@
+﻿<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Sales Report</h5>
+            <!-- Add a search box beside the title -->
+            @* <input type="text" id="tableSearch" class="form-control w-25" placeholder="Search..." style="box-shadow: none;"> *@
+            <div class="position-relative w-25">
+                <input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="box-shadow: none;">
+                <span id="clearSearch" class="position-absolute end-0 top-50 translate-middle-y me-2"
+                      style="cursor: pointer; font-size: 1.2rem; display: none;">
+                    &times;
+                </span>
+            </div>
+        </div>
+
+        <div class="scrollable-table">
+            <table id="reportData" class="table table-bordered table-striped" style="width: 100%; min-width: 1200px;">
+                <thead class="thead-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Invoice</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Total</th>
+                        <th>Paid</th>
+                        <th>Due</th>
+                        <th>Date</th>
+                        <th>Report</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int serialNumber = 1; // Initialize a counter
+                    }
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@serialNumber</td>
+                            <td>@order.InvoiceNumber</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.Email</td>
+                            <td>@order.Phone</td>
+                            <td>@order.TotalAmount</td>
+                            <td>@order.PaidAmount</td>
+                            <td>@order.Balance</td>
+                            <td>@order.Date</td>
+                            <td>
+                                <a asp-controller="Report" asp-action="ReportDownload" asp-route-orderId="@order.OrderId" class="btn btn-sm btn-warning text-white pay-now-btn" style="box-shadow: none">
+                                    Download
+                                </a>
+                            </td>
+                        </tr>
+                        serialNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>        
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/report.js"></script>
+}

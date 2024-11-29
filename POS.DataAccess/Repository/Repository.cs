@@ -42,7 +42,7 @@ namespace POS.DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             if (dbSet == null)
             {
@@ -51,6 +51,13 @@ namespace POS.DataAccess.Repository
 
             IQueryable<T> query = dbSet;
 
+            // Apply the filter if provided
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            // Include specified related properties
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -61,6 +68,7 @@ namespace POS.DataAccess.Repository
 
             return query.ToList();
         }
+
 
         public void Remove(T entity)
         {

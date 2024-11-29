@@ -13,6 +13,8 @@ namespace POS.DataAccess.Repository.IRepository
         IApplicationUserRepository ApplicationUser { get; }
         IStoreRepository Store { get; }
         IProductRepository Product { get; }
+        IOrderRepository Order { get; }
+        IOrderItemRepository OrderItem { get; }
 
         void Save();
     }

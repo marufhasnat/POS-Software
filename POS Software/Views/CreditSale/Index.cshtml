@@ -1,0 +1,104 @@
+﻿<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Credit Sales Data</h5>
+            <!-- Add a search box beside the title -->
+            @* <input type="text" id="tableSearch" class="form-control w-25" placeholder="Search..." style="box-shadow: none;"> *@
+            <div class="position-relative w-25">
+                <input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="box-shadow: none;">
+                <span id="clearSearch" class="position-absolute end-0 top-50 translate-middle-y me-2"
+                      style="cursor: pointer; font-size: 1.2rem; display: none;">
+                    &times;
+                </span>
+            </div>
+        </div>
+
+        <div class="scrollable-table">
+            <table id="creditSaleData" class="table table-bordered table-striped" style="width: 100%; min-width: 1200px;">
+                <thead class="thead-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Invoice</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Total</th>
+                        <th>Paid</th>
+                        <th>Due</th>
+                        <th>Date</th>
+                        <th>Pay Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int serialNumber = 1; // Initialize a counter
+                    }
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@serialNumber</td>
+                            <td>@order.InvoiceNumber</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.Email</td>
+                            <td>@order.Phone</td>
+                            <td>@order.TotalAmount</td>
+                            <td>@order.PaidAmount</td>
+                            <td>@order.Balance</td>
+                            <td>@order.Date</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning text-white pay-now-btn"
+                                        data-balance="@order.Balance"
+                                        data-order-id="@order.OrderId"
+                                        style="box-shadow: none"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#creaditSaleCreateModal">
+                                    Pay Now
+                                </button>
+                            </td>
+                        </tr>
+                        serialNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal for Credit Sale -->
+        <div class="modal fade" id="creaditSaleCreateModal" tabindex="-1" aria-labelledby="creditSaleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form asp-controller="CreditSale" asp-action="UpdateDue" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="creditSaleModalLabel">
+                                <span>Accept Due Balance</span>
+                            </h5>
+                            <button type="button" style="box-shadow: none" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="orderBalance" class="form-label fw-bold ms-1">Total Due Balance</label>
+                                <input type="number" class="form-control" id="orderBalance" name="order.Balance"
+                                       required readonly />
+                            </div>
+                            <input type="hidden" id="orderId" name="orderId" />
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="paymentAmount" class="form-label fw-bold ms-1">Payment Amount</label>
+                                <input type="number" class="form-control" id="paymentAmount" name="paymentAmount" step="0.01"
+                                       required placeholder="Enter the amount" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                            <button type="submit" class="btn btn-success btn-no-shadow">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/creditSale.js"></script>
+}
