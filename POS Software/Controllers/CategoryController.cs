@@ -8,7 +8,7 @@ using POS.Utility;
 
 namespace POS_Software.Areas.Admin.Controllers
 {
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -116,12 +116,21 @@ namespace POS_Software.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Check for references
+            var hasDependencies = _unitOfWork.Product.Get(oi => oi.CategoryId == id.Value);
+            if (hasDependencies != null)
+            {
+                TempData["error"] = "Cannot delete this category as it is referenced by other records.";
+                return RedirectToAction("Index");
+            }
+
             _unitOfWork.Category.Remove(categoryToBeDeleted);
             _unitOfWork.Save();
 
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
+
 
 
         #region API CALLS

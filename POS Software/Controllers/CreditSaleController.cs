@@ -3,28 +3,64 @@ using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using POS.DataAccess.Repository.IRepository;
 using POS.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace POS_Software.Controllers
 {
+    [Authorize]
     public class CreditSaleController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreditSaleController(IUnitOfWork unitOfWork)
+        public CreditSaleController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            // Fetch orders with non-zero balance
-            var creditOrders = _unitOfWork.Order
-                .GetAll(includeProperties: "OrderItems")
-                .Where(o => o.Balance > 0)
-                .ToList();
+            var currentUserId = _userManager.GetUserId(User);
 
-            return View(creditOrders);
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return BadRequest("User is not logged in or invalid.");
+            }
+
+            var userRoles = _unitOfWork.ApplicationUser.GetUserRoles(currentUserId) ?? new List<string>();
+            List<Order> creditOrders;
+
+            if (userRoles.Contains("Admin"))
+            {
+                // Admin: Fetch all credit orders
+                creditOrders = _unitOfWork.Order
+                    .GetAll(o => o.Balance > 0, includeProperties: "OrderItems,Store")
+                    .ToList();
+            }
+            else
+            {
+                // Manager or Cashier: Filter credit orders by storeId
+                var stores = _unitOfWork.Store
+                    .GetAll(s => s.CashierId.ToString() == currentUserId || s.ManagerId.ToString() == currentUserId)
+                    .ToList();
+
+                if (!stores.Any())
+                {
+                    return View(new List<Order>()); // Return empty list if no stores are linked
+                }
+
+                var storeIds = stores.Select(s => s.Id).ToList();
+
+                creditOrders = _unitOfWork.Order
+                    .GetAll(o => o.Balance > 0 && storeIds.Contains(o.StoreId), includeProperties: "OrderItems,Store")
+                    .ToList();
+            }
+
+            return View(creditOrders ?? new List<Order>());
         }
+
 
         [HttpPost]
         public IActionResult UpdateDue(Guid orderId, decimal paymentAmount)

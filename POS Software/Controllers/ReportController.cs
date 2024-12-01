@@ -3,28 +3,64 @@ using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using POS.DataAccess.Repository.IRepository;
 using POS.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace POS_Software.Controllers
 {
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReportController(IUnitOfWork unitOfWork)
+        public ReportController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            // Fetch orders with non-zero balance
-            var completeOrders = _unitOfWork.Order
-                .GetAll(includeProperties: "OrderItems")
-                .Where(o => o.Balance == 0)
-                .ToList();
+            var currentUserId = _userManager.GetUserId(User);
 
-            return View(completeOrders);
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return BadRequest("User is not logged in or invalid.");
+            }
+
+            var userRoles = _unitOfWork.ApplicationUser.GetUserRoles(currentUserId) ?? new List<string>();
+            List<Order> completeOrders;
+
+            if (userRoles.Contains("Admin"))
+            {
+                // Admin: Fetch all completed orders
+                completeOrders = _unitOfWork.Order
+                    .GetAll(o => o.Balance == 0, includeProperties: "OrderItems,Store")
+                    .ToList();
+            }
+            else
+            {
+                // Manager or Cashier: Filter completed orders by storeId
+                var stores = _unitOfWork.Store
+                    .GetAll(s => s.CashierId.ToString() == currentUserId || s.ManagerId.ToString() == currentUserId)
+                    .ToList();
+
+                if (!stores.Any())
+                {
+                    return View(new List<Order>()); // Return empty list if no stores are linked
+                }
+
+                var storeIds = stores.Select(s => s.Id).ToList();
+
+                completeOrders = _unitOfWork.Order
+                    .GetAll(o => o.Balance == 0 && storeIds.Contains(o.StoreId), includeProperties: "OrderItems,Store")
+                    .ToList();
+            }
+
+            return View(completeOrders ?? new List<Order>());
         }
+
 
         [HttpGet]
         public IActionResult ReportDownload(Guid orderId)

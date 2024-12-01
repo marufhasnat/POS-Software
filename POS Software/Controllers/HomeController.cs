@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using POS.DataAccess.Repository.IRepository;
@@ -20,12 +21,24 @@ namespace POS_Software.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var currentUserId = _userManager.GetUserId(User);
 
-            // Check if the current user is an Admin
-            var userRoles = _userManager.GetRolesAsync(_userManager.FindByIdAsync(currentUserId).Result).Result;
+            // Check if the current user is authenticated
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                // Render the _LoginPartial.cshtml partial view
+                return PartialView("_LoginPartial");
+            }
+
+            var user = await _userManager.FindByIdAsync(currentUserId);
+            if (user == null)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
             var isAdmin = userRoles.Contains("Admin");
 
             // Fetch the store associated with the current user (if not an Admin)
@@ -36,29 +49,37 @@ namespace POS_Software.Controllers
             // Allow access for Admin even if store is null
             if (!isAdmin && store == null)
             {
-                return RedirectToAction("AccessDenied", "Account"); // Redirect if not Admin and no store is found
+                return RedirectToAction("AccessDenied", "Account");
             }
 
             // Fetch all orders and include related properties
             var orders = _unitOfWork.Order.GetAll(includeProperties: "OrderItems").ToList();
             var today = DateTime.Today;
 
-            // Create the DashboardViewModel
+            // If the user is not Admin, filter orders based on the store
+            if (!isAdmin && store != null)
+            {
+                orders = orders.Where(o => o.StoreId == store.Id).ToList();
+            }
+
+            // Calculate TodaySale, TodayRevenue, TotalSale, TotalRevenue, TodayOrdersCount, and TotalOrdersCount
             var dashboardViewModel = new DashboardViewModel
             {
-                // Today's metrics
+                // Today's metrics (for the store if not Admin)
                 TodaySale = orders.Where(o => o.Date.Date == today).Sum(o => o.PaidAmount),
                 TodayRevenue = orders.Where(o => o.Date.Date == today).Sum(o => o.PayableAmount),
 
-                // Overall metrics
+                // Total metrics (for the store if not Admin)
                 TotalSale = orders.Sum(o => o.PaidAmount),
                 TotalRevenue = orders.Sum(o => o.PayableAmount),
 
-                // Additional details
+                // Today's order count (for the store if not Admin)
                 TodayOrdersCount = orders.Count(o => o.Date.Date == today),
+
+                // Total order count (for the store if not Admin)
                 TotalOrdersCount = orders.Count(),
 
-                // Use the store name if available; otherwise, set a default for Admin
+                // Store Name (if Admin, show "Admin Dashboard")
                 StoreName = store?.Name ?? "Admin Dashboard"
             };
 

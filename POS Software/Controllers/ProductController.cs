@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using POS.DataAccess.Repository.IRepository;
 using POS.Models;
 using POS.Models.ViewModels;
+using POS.Utility;
 
 namespace POS_Software.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -184,6 +190,15 @@ namespace POS_Software.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Check for references in the OrderItems table
+            var isProductReferenced = _unitOfWork.OrderItem.Get(oi => oi.ProductId == id.Value);
+            if (isProductReferenced != null)
+            {
+                TempData["error"] = "Cannot delete this product as it is referenced by existing order items.";
+                return RedirectToAction("Index");
+            }
+
+            // Proceed to delete the product
             _unitOfWork.Product.Remove(productToBeDeleted);
             _unitOfWork.Save();
 
@@ -191,18 +206,53 @@ namespace POS_Software.Controllers
             return RedirectToAction("Index");
         }
 
+
         #region API CALLS
 
-        // https://localhost:7230/Product/getall => to get all the propoerties of Product in json for using in datatable
+        // https://localhost:7230/product/getall => to get all the propoerties of Product in json for using in datatable
         [HttpGet]
         public IActionResult GetAll()
         {
-            // Fetch products and include related with using Include
-            var objProductList = _unitOfWork.Product.GetAll(includeProperties: "Supplier,Category,Store").ToList(); // Get data as IQueryable and include relationships
+            var currentUserId = _userManager.GetUserId(User);
 
-            // Return the data as JSON
-            return Json(new { data = objProductList });
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return BadRequest("User is not logged in or invalid.");
+            }
+
+            var userRoles = _unitOfWork.ApplicationUser.GetUserRoles(currentUserId) ?? new List<string>();
+            List<Product> products;
+
+            if (userRoles.Contains("Admin"))
+            {
+                // Admin: Fetch all products
+                products = _unitOfWork.Product
+                    .GetAll(includeProperties: "Supplier,Category,Store")
+                    .ToList();
+            }
+            else
+            {
+                // Manager or Cashier: Filter products by StoreId
+                var stores = _unitOfWork.Store
+                    .GetAll(s => s.CashierId.ToString() == currentUserId || s.ManagerId.ToString() == currentUserId)
+                    .ToList();
+
+                if (!stores.Any())
+                {
+                    return Json(new { data = new List<Product>() }); // Return empty list if no stores are linked
+                }
+
+                var storeIds = stores.Select(s => s.Id).ToList();
+
+                products = _unitOfWork.Product
+                    .GetAll(p => storeIds.Contains(p.StoreId), includeProperties: "Supplier,Category,Store")
+                    .ToList();
+            }
+
+            // Return the filtered product list as JSON
+            return Json(new { data = products });
         }
+
 
         #endregion
     }

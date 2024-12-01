@@ -69,20 +69,27 @@ function loadProductTable() {
             {
                 data: 'id',
                 "render": function (data, type, row) {
-                    return `<div class="d-flex">
-                                <div class="w-75 btn-group" role="group">
-                                    <button onclick="openUpdateModal('${data}', '${row.name}', '${row.description}', '${row.batch}', '${row.costPrice}', '${row.sellPrice}', '${row.quantity}', '${row.supplier ? row.supplier.id : ''}', '${row.category ? row.category.id : ''}', '${row.store ? row.store.id : ''}', '${row.manufactureDate}', '${row.expiryDate}')"
-                                            class="btn btn-warning text-white btn-no-shadow me-2" data-bs-toggle="modal" data-bs-target="#productUpdateModal">
-                                       <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onClick="openDeleteModal('${data}')"
-                                       class="btn btn-danger btn-no-shadow ms-2" data-bs-toggle="modal" data-bs-target="#productDeleteModal">
-                                       <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>`;
+                    // Show the action buttons only if the user is Admin or Manager
+                    if (userRole === "Admin" || userRole === "Manager") {
+                        return `<div class="d-flex">
+                                    <div class="w-75 btn-group" role="group">
+                                        <button onclick="openUpdateModal('${data}', '${row.name}', '${row.description}', '${row.batch}', '${row.costPrice}', '${row.sellPrice}', '${row.quantity}', '${row.supplier ? row.supplier.id : ''}', '${row.category ? row.category.id : ''}', '${row.store ? row.store.id : ''}', '${row.manufactureDate}', '${row.expiryDate}')"
+                                                class="btn btn-warning text-white btn-no-shadow me-2" data-bs-toggle="modal" data-bs-target="#productUpdateModal">
+                                           <i class="fas fa-edit"></i>
+                                        </button>
+                                        ${userRole === "Admin" ?
+                                `<button onClick="openDeleteModal('${data}')"
+                                                class="btn btn-danger btn-no-shadow ms-2" data-bs-toggle="modal" data-bs-target="#productDeleteModal">
+                                                <i class="fas fa-trash"></i>
+                                            </button>`
+                                : ''}
+                                    </div>
+                                </div>`;
+                    }
+                    return ''; // Return empty string if the user is not Admin or Manager
                 },
-                "width": "10%"
+                "width": "10%",
+                "visible": userRole === "Admin" || userRole === "Manager"
             }
         ],
         "columnDefs": [

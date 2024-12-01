@@ -3,6 +3,38 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POS Software</title>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Animated Css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- DataTable -->
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+
+    <!-- Toastr Notification -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
 @if (!SignInManager.IsSignedIn(User)){
     <div class="container my-5" id="login-section">
         <div class="logo-container text-center">
@@ -43,49 +75,52 @@
             </div>
         </div>
     </div>
+    }
+</body>
+</html>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const loginSection = document.getElementById('login-section');
-            const managerSignup = document.getElementById('manager-signup');
-            const cashierSignup = document.getElementById('cashier-signup');
-            const loginButtons = document.querySelectorAll('#login-button');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loginSection = document.getElementById('login-section');
+        const managerSignup = document.getElementById('manager-signup');
+        const cashierSignup = document.getElementById('cashier-signup');
+        const loginButtons = document.querySelectorAll('#login-button');
 
-            // Check if the user is on the Register or Login page
-            const isActionPage = window.location.pathname.includes("/Account/Register") || window.location.pathname.includes("/Account/Login");
+        // Check if the user is on the Register or Login page
+        const isActionPage = window.location.pathname.includes("/Account/Register") || window.location.pathname.includes("/Account/Login");
 
-            // Hide the login section if on an action page
-            if (isActionPage) {
+        // Hide the login section if on an action page
+        if (isActionPage) {
+            loginSection.style.display = 'none';
+        }
+
+        // Handle Sign Up click for Manager
+        managerSignup.addEventListener('click', function () {
+            loginSection.style.display = 'none';
+            window.location.href = '/Identity/Account/Register?role=Manager';
+        });
+
+        // Handle Sign Up click for Cashier
+        cashierSignup.addEventListener('click', function () {
+            loginSection.style.display = 'none';
+            window.location.href = '/Identity/Account/Register?role=Cashier';
+        });
+
+        // Handle Login button click
+        loginButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default navigation
                 loginSection.style.display = 'none';
-            }
-
-            // Handle Sign Up click for Manager
-            managerSignup.addEventListener('click', function () {
-                loginSection.style.display = 'none';
-                window.location.href = '/Identity/Account/Register?role=Manager';
-            });
-
-            // Handle Sign Up click for Cashier
-            cashierSignup.addEventListener('click', function () {
-                loginSection.style.display = 'none';
-                window.location.href = '/Identity/Account/Register?role=Cashier';
-            });
-
-            // Handle Login button click
-            loginButtons.forEach(button => {
-                button.addEventListener('click', function (e) {
-                    e.preventDefault(); // Prevent default navigation
-                    loginSection.style.display = 'none';
-                    window.location.href = '/Identity/Account/Login';
-                });
-            });
-
-            // Handle back button or page reload
-            window.addEventListener('popstate', function () {
-                if (!window.location.pathname.includes("/Account/Register") && !window.location.pathname.includes("/Account/Login")) {
-                    loginSection.style.display = 'block';
-                }
+                window.location.href = '/Identity/Account/Login';
             });
         });
-    </script>
-}
+
+        // Handle back button or page reload
+        window.addEventListener('popstate', function () {
+            if (!window.location.pathname.includes("/Account/Register") && !window.location.pathname.includes("/Account/Login")) {
+                loginSection.style.display = 'block';
+            }
+        });
+    });
+</script>
+

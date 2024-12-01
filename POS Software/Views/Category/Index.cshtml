@@ -4,10 +4,12 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Categories Data</h5>
-            <a asp-controller="Category" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#categoryCreateModal">
-                <i class="fas fa-plus-circle"></i> &nbsp;Add Category
-            </a>
-
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Category" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#categoryCreateModal">
+                    <i class="fas fa-plus-circle"></i> &nbsp;Add Category
+                </a>
+            }
             <!-- Modal for Create Category -->
             <div class="modal fade" id="categoryCreateModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -106,7 +108,10 @@
                         <th>S/N</th>
                         <th>Category Name</th>
                         <th>Created At</th>
-                        <th>Action</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th>Action</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -118,5 +123,9 @@
 </div>
 
 @section Scripts {
+    <script>
+        var userRole = '@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Manager") ? "Manager" : "Cashier"))';
+    </script>
+
     <script src="~/js/category.js"></script>
 }

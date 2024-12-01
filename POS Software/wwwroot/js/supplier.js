@@ -50,20 +50,27 @@ function loadSupplierTable() {
             {
                 data: 'id',
                 "render": function (data, type, row) {
-                    return `<div class="d-flex justify-content-center">
-                                <div class="w-75 btn-group" role="group">
-                                    <button onclick="openUpdateModal('${data}', '${row.supplierName}', '${row.company}', '${row.email}', '${row.phone}', '${row.address}')"
-                                            class="btn btn-warning text-white btn-no-shadow me-2" data-bs-toggle="modal" data-bs-target="#supplierUpdateModal">
-                                       <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onClick="openDeleteModal('${data}')"
-                                       class="btn btn-danger btn-no-shadow ms-2" data-bs-toggle="modal" data-bs-target="#supplierDeleteModal">
-                                       <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>`;
+                    // Show edit and delete buttons only if the user is Admin or Manager
+                    if (userRole === "Admin" || userRole === "Manager") {
+                        return `<div class="d-flex justify-content-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <button onclick="openUpdateModal('${data}', '${row.supplierName}', '${row.company}', '${row.email}', '${row.phone}', '${row.address}')"
+                                                class="btn btn-warning text-white btn-no-shadow me-2" data-bs-toggle="modal" data-bs-target="#supplierUpdateModal">
+                                           <i class="fas fa-edit"></i>
+                                        </button>
+                                        ${userRole === "Admin" ?
+                                `<button onClick="openDeleteModal('${data}')"
+                                                class="btn btn-danger btn-no-shadow ms-2" data-bs-toggle="modal" data-bs-target="#supplierDeleteModal">
+                                                <i class="fas fa-trash"></i>
+                                            </button>`
+                                : ''}
+                                    </div>
+                                </div>`;
+                    }
+                    return ''; // Return empty string if the user is not Admin or Manager
                 },
-                "width": "15%"
+                "width": "15%",
+                "visible": userRole === "Admin" || userRole === "Manager"
             }
         ],
         "columnDefs": [

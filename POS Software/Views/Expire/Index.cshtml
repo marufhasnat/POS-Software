@@ -1,7 +1,7 @@
 ﻿<div class="container mt-4">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Sales Report</h5>
+            <h5 class="mb-0">Expired Data</h5>
             <!-- Add a search box beside the title -->
             @* <input type="text" id="tableSearch" class="form-control w-25" placeholder="Search..." style="box-shadow: none;"> *@
             <div class="position-relative w-25">
@@ -14,48 +14,32 @@
         </div>
 
         <div class="scrollable-table">
-            <table id="searchData" class="table table-bordered table-striped" style="width: 100%; min-width: 1200px;">
+            <table id="searchData" class="table table-bordered table-striped" style="width: 100%; min-width: 700px;">
                 <thead class="thead-light">
                     <tr>
                         <th>S/N</th>
-                        <th>Invoice</th>
-                        <th>Customer</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Total</th>
-                        <th>Paid</th>
-                        <th>Due</th>
-                        <th>Date</th>
-                        <th>Report</th>
+                        <th>Product Name</th>
+                        <th>Store Name</th>
+                        <th>Expiry Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     @{
                         int serialNumber = 1; // Initialize a counter
                     }
-                    @foreach (var order in Model)
+                    @foreach (var product in Model)
                     {
                         <tr>
                             <td>@serialNumber</td>
-                            <td>@order.InvoiceNumber</td>
-                            <td>@order.CustomerName</td>
-                            <td>@order.Email</td>
-                            <td>@order.Phone</td>
-                            <td>@order.TotalAmount</td>
-                            <td>@order.PaidAmount</td>
-                            <td>@order.Balance</td>
-                            <td>@order.Date</td>
-                            <td>
-                                <a asp-controller="Report" asp-action="ReportDownload" asp-route-orderId="@order.OrderId" class="btn btn-sm btn-warning text-white pay-now-btn" style="box-shadow: none">
-                                    Download
-                                </a>
-                            </td>
+                            <td>@product.Name</td>
+                            <td>@(product.Store?.Name ?? "N/A")</td>
+                            <td>@product.ExpiryDate.ToShortDateString()</td>
                         </tr>
                         serialNumber++;
                     }
                 </tbody>
             </table>
-        </div>        
+        </div>
     </div>
 </div>
 

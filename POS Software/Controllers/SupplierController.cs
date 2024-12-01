@@ -6,7 +6,7 @@ using POS.Utility;
 
 namespace POS_Software.Controllers
 {
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize]
     public class SupplierController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -111,12 +111,22 @@ namespace POS_Software.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Check for references in the OrderItems table
+            var isSupplierReferenced = _unitOfWork.OrderItem.Get(oi => oi.Product.SupplierId == id.Value);
+            if (isSupplierReferenced != null)
+            {
+                TempData["error"] = "Cannot delete this supplier as it is referenced by existing order items.";
+                return RedirectToAction("Index");
+            }
+
+            // Proceed to delete the supplier
             _unitOfWork.Supplier.Remove(supplierToBeDeleted);
             _unitOfWork.Save();
 
             TempData["success"] = "Supplier deleted successfully.";
             return RedirectToAction("Index");
         }
+
 
 
         #region API CALLS

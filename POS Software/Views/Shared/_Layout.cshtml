@@ -87,10 +87,10 @@
                             @if (User.IsInRole(SD.Role_Admin))
                             {
                                 <a asp-controller="User" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-users"></i> Users</a>
-                                <a asp-controller="Store" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-store"></i> Stores</a>
-                                <a asp-controller="Category" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="far fa-list-alt"></i> Categories</a>                                
+                                <a asp-controller="Store" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-store"></i> Stores</a>                                                                
                             }
                             <a asp-controller="Supplier" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supplier" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fa fa-user-tie"></i> Suppliers</a>
+                            <a asp-controller="Category" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="far fa-list-alt"></i> Categories</a>
                             <a asp-controller="Product" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-box-open"></i> Products</a>
                             @if (User.IsInRole(SD.Role_Cashier))
                             {
@@ -99,7 +99,7 @@
                             <a asp-controller="OrderList" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "OrderList" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-file-invoice-dollar"></i> Orders</a>
                             <a asp-controller="Report" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-chart-pie"></i> Reports</a>
                             <a asp-controller="CreditSale" asp-action="Index" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CreditSale" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-credit-card"></i> Credit Sales</a>
-                            <partial name="_LoginPartial" />
+                            <a asp-controller="Expire" asp-action="Index" style="color: red" class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Expire" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"><i class="fas fa-ban"></i> Expired</a>
                         </div>
                     </nav>
                 </div>
@@ -118,7 +118,7 @@
                             <input class="form-control border-0" type="search" placeholder="Search">
                         </form>
                         <div class="navbar-nav align-items-center ms-auto">
-                            <div class="nav-item dropdown">
+                            @* <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                     <i class="fa fa-envelope me-lg-2"></i>
                                     <span class="d-none d-lg-inline-flex">Message</span>
@@ -148,7 +148,7 @@
                                     </a>
                                     <hr class="dropdown-divider">
                                 </div>
-                            </div>
+                            </div> *@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                     <img class="rounded-circle me-lg-2" src="~/img/user.jpg" alt="" style="width: 40px; height: 40px;">

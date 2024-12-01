@@ -2,7 +2,7 @@
 
     // Search and Clear functionality
     const searchInput = document.getElementById("tableSearch");
-    const table = document.getElementById("reportData").getElementsByTagName("tbody")[0];
+    const table = document.getElementById("searchData").getElementsByTagName("tbody")[0];
     const clearButton = document.getElementById("clearSearch");
 
     searchInput.addEventListener("input", function () {

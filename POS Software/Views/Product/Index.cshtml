@@ -4,10 +4,12 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Products Data</h5>
-            <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#productCreateModal">
-                <i class="fas fa-plus-circle"></i> &nbsp;Add Product
-            </a>
-
+            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary" style="box-shadow: none" data-bs-toggle="modal" data-bs-target="#productCreateModal">
+                    <i class="fas fa-plus-circle"></i> &nbsp;Add Product
+                </a>
+            }
             <!-- Create Product Modal -->
             <div class="modal fade" id="productCreateModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -294,7 +296,10 @@
                         <th>In Stock</th>
                         <th>Store</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                        {
+                            <th>Actions</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -306,5 +311,8 @@
 </div>
 
 @section Scripts {
+    <script>
+        var userRole = '@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Manager") ? "Manager" : "Cashier"))';
+    </script>
     <script src="~/js/product.js"></script>
 }
